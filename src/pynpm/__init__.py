@@ -1,3 +1,3 @@
 """pynpm - An npm-like package manager for Python."""
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"

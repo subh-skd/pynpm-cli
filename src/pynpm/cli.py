@@ -114,6 +114,30 @@ def run(script_name):
     raise SystemExit(exit_code)
 
 
+# ─── activate ────────────────────────────────────────────────────────
+
+@main.command()
+def activate():
+    """Detect host platform and activate the .venv."""
+    import platform
+
+    project_dir = os.getcwd()
+
+    if not venv_manager.venv_exists(project_dir):
+        click.secho("No .venv found. Run 'pynpm init' first.", fg="red")
+        raise SystemExit(1)
+
+    host_os = platform.system()
+    click.echo(f"Detected platform: {host_os}")
+
+    venv_manager.activate_venv(project_dir)
+    click.secho("Activated .venv for child processes.", fg="green")
+
+    activate_cmd = venv_manager.get_activate_command(project_dir)
+    click.echo(f"\nTo activate in your current shell, run:")
+    click.secho(f"  {activate_cmd}", fg="cyan")
+
+
 # ─── shorthand aliases ──────────────────────────────────────────────
 
 @main.command(name="i")

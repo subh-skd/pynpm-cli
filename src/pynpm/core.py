@@ -59,15 +59,6 @@ def init_project(project_dir: str, name: str, version: str, description: str, au
     venv_manager.create_venv(project_dir)
     click.echo("Created .venv virtual environment")
 
-    # Detect host and activate venv
-    host_os = platform.system()  # Windows, Linux, Darwin
-    click.echo(f"Detected platform: {host_os}")
-    venv_manager.activate_venv(project_dir)
-    click.secho("Activated .venv", fg="green")
-
-    activate_cmd = venv_manager.get_activate_command(project_dir)
-    click.echo(f"To activate manually in your shell, run:\n  {activate_cmd}")
-
     # Write main.py if it doesn't exist
     main_py_path = os.path.join(project_dir, "main.py")
     if not os.path.isfile(main_py_path):

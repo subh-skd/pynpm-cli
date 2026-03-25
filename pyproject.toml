@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pynpm-cli"
-version = "0.1.2"
+version = "0.1.3"
 description = "An npm-like package manager for Python that uses pip under the hood"
 readme = "README.md"
 license = {text = "MIT"}
@@ -23,6 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Build Tools",
     "Topic :: System :: Systems Administration",
 ]
@@ -38,7 +39,7 @@ test = ["pytest>=7.0"]
 pynpm = "pynpm.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/subh-skd/pynpm-cli.git"
+Homepage = "https://github.com/subh-skd/pynpm-cli"
 Repository = "https://github.com/subh-skd/pynpm-cli"
 Issues = "https://github.com/subh-skd/pynpm-cli/issues"
 
