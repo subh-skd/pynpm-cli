@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pynpm-cli"
-version = "0.1.0"
+version = "0.1.1"
 description = "An npm-like package manager for Python that uses pip under the hood"
 readme = "README.md"
 license = {text = "MIT"}
