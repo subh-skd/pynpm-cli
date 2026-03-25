@@ -41,7 +41,10 @@ def _parse_package_spec(spec: str) -> Tuple[str, Optional[str]]:
 
 
 def init_project(project_dir: str, name: str, version: str, description: str, author: str, license_: str, python_version: str) -> None:
-    """Initialize a new project with package.yml and .venv."""
+    """Initialize a new project with package.yml, .venv, main.py."""
+    import os
+    import platform
+
     config.create_default_package_yml(
         project_dir,
         name=name,
@@ -52,11 +55,39 @@ def init_project(project_dir: str, name: str, version: str, description: str, au
         python_version=python_version,
     )
     click.echo("Created package.yml")
+
     venv_manager.create_venv(project_dir)
     click.echo("Created .venv virtual environment")
 
+    # Detect host and activate venv
+    host_os = platform.system()  # Windows, Linux, Darwin
+    click.echo(f"Detected platform: {host_os}")
+    venv_manager.activate_venv(project_dir)
+    click.secho("Activated .venv", fg="green")
+
+    activate_cmd = venv_manager.get_activate_command(project_dir)
+    click.echo(f"To activate manually in your shell, run:\n  {activate_cmd}")
+
+    # Write main.py if it doesn't exist
+    main_py_path = os.path.join(project_dir, "main.py")
+    if not os.path.isfile(main_py_path):
+        with open(main_py_path, "w") as f:
+            f.write(f'''"""
+{name} - {description or "A Python project managed by pynpm."}
+"""
+
+
+def main():
+    print("Hello from {name}!")
+    print("Edit this file to get started.")
+
+
+if __name__ == "__main__":
+    main()
+''')
+        click.echo("Created main.py")
+
     # Write .gitignore if it doesn't exist
-    import os
     gitignore_path = os.path.join(project_dir, ".gitignore")
     if not os.path.isfile(gitignore_path):
         with open(gitignore_path, "w") as f:

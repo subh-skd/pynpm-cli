@@ -56,3 +56,41 @@ def ensure_venv(project_dir: str) -> None:
     """Ensure venv exists, create if not."""
     if not venv_exists(project_dir):
         create_venv(project_dir)
+
+
+def get_activate_command(project_dir: str) -> str:
+    """Return the platform-specific command to activate the venv."""
+    venv_path = get_venv_path(project_dir)
+    if sys.platform == "win32":
+        # Detect shell: PowerShell vs cmd
+        shell = os.environ.get("COMSPEC", "").lower()
+        parent = os.environ.get("PSModulePath", "")
+        if parent:
+            # Likely PowerShell
+            return os.path.join(venv_path, "Scripts", "Activate.ps1")
+        return os.path.join(venv_path, "Scripts", "activate.bat")
+    # Unix — detect fish / csh vs bash/zsh
+    shell = os.environ.get("SHELL", "/bin/bash")
+    if "fish" in shell:
+        return f"source {os.path.join(venv_path, 'bin', 'activate.fish')}"
+    if "csh" in shell:
+        return f"source {os.path.join(venv_path, 'bin', 'activate.csh')}"
+    return f"source {os.path.join(venv_path, 'bin', 'activate')}"
+
+
+def activate_venv(project_dir: str) -> bool:
+    """Attempt to activate the venv in the current process environment."""
+    venv_path = get_venv_path(project_dir)
+    if not venv_exists(project_dir):
+        return False
+
+    # Set environment variables so child processes use the venv
+    if sys.platform == "win32":
+        bin_dir = os.path.join(venv_path, "Scripts")
+    else:
+        bin_dir = os.path.join(venv_path, "bin")
+
+    os.environ["VIRTUAL_ENV"] = venv_path
+    os.environ["PATH"] = bin_dir + os.pathsep + os.environ.get("PATH", "")
+    os.environ.pop("PYTHONHOME", None)
+    return True
